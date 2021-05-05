@@ -19,16 +19,20 @@ const Messages = {
 }
 
 const RepeatTime = {
-    secondly : "secondly",
-    minutely : "minutely",
-    hourly : "hourly",
     daily : "daily",
     weekly : "weekly",
     monthly : "monthly",
-    yearly : "yearly"
+    none : "none"
+}
+
+const CornString = {
+    daily : "0 1 * * *",
+    weekly : "0 0 * * 0",
+    monthly : "0 0 1 * *"
 }
 
 module.exports = {
     Messages : Messages,
-    RepeatTime : RepeatTime
+    RepeatTime : RepeatTime,
+    CornString : CornString
 }

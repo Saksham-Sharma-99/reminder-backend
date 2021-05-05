@@ -1,5 +1,5 @@
 const scheduler = require('node-schedule');
-const { Messages } = require('../Models/Constants');
+const { Messages, CornString, RepeatTime } = require('../Models/Constants');
 const { UserModel } = require('../Models/User');
 const { SendMail } = require('./Mailer');
 
@@ -20,6 +20,7 @@ function ScheduleReminder(reminderId,userId , index){
                     console.log( Messages.SENDING_MAIL, user.name);
                     SendMail(reminderId,userId)
                     scheduler.cancelJob(String(reminder._id))
+                    RecurringReminder(reminderId , userId  , reminder.repeat)
                 })
             }else{
                 try{
@@ -32,6 +33,34 @@ function ScheduleReminder(reminderId,userId , index){
             }
         }
     })
+}
+
+function RecurringReminder(reminderId , userId , repeat){
+    switch(repeat){
+        case RepeatTime.daily :
+            scheduler.scheduleJob(String(reminderId) , CornString.daily , ()=>{
+                SendMail(reminderId , userId)
+            })
+            break;
+
+        case RepeatTime.weekly :
+            scheduler.scheduleJob(String(reminderId) , CornString.weekly , ()=>{
+                SendMail(reminderId , userId)
+            })
+            break;
+
+        case RepeatTime.monthly :
+            scheduler.scheduleJob(String(reminderId) , CornString.monthly , ()=>{
+                SendMail(reminderId , userId)
+            })
+            break;
+
+        case RepeatTime.none :
+            break;
+        
+        default :
+            break;
+    }
 }
 
 function RemoveSchedule(reminderId){
