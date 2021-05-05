@@ -14,7 +14,9 @@ const Messages = {
     MARKED_EXPIRED : "Marked expired",
     SCHEDULE_REMOVED : "Schedule removed",
 
-    SENDING_MAIL : "sending mail to"
+    SENDING_MAIL : "sending mail to",
+    CANT_SEND_MAIL : "Can't send mail",
+    MAIL_SENT : "Mail sent successfully to"
 
 }
 

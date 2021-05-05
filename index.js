@@ -3,13 +3,15 @@ const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const dotenv = require('dotenv').config()
+
 const { setUpDemoUser } = require('./Models/User')
 const { AddUser, LogIn } = require('./Controllers/User')
 const { Verify, VerifyToken } = require('./Controllers/Auth')
 const { AddReminder, DeleteReminder,UpdateReminder } = require('./Controllers/Reminder')
 
 mongoose.connect(
-    'mongodb://127.0.0.1:27017/reminderDB', 
+    process.env.MONGODB_URI, 
     {
         useNewUrlParser : true ,
         useUnifiedTopology: true
@@ -118,7 +120,7 @@ app.put("/reminder/:id" , Verify , (req,res)=>{
 })
 
 
-app.listen(3000 , ()=>{
+app.listen(process.env.PORT , ()=>{
     console.log("Server started on port :",3000);
     setUpDemoUser();
 })

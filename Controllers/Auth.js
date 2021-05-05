@@ -13,7 +13,7 @@ function Verify(req,res,next){
 }
 
 function VerifyToken(token , callback){
-    jwt.verify(token , 'secretkey' ,(err,authData)=>{
+    jwt.verify(token , process.env.SECRET_KEY ,(err,authData)=>{
         if(err != null){
             console.log(err)
             callback(err , null);
@@ -24,7 +24,7 @@ function VerifyToken(token , callback){
 }
 
 function AssignToken(user,callback){
-    jwt.sign({user:user},'secretkey',(err,token)=>{
+    jwt.sign({user:user},process.env.SECRET_KEY,(err,token)=>{
         if(err!=null){
             console.log(err)
             callback(err,null)
