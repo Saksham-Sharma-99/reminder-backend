@@ -16,7 +16,6 @@ function AddReminder(userId , name , des , time , repeat , callback){
             try{
                 const remindTime = new Date(time);
                 const reminder = {
-                    id : user.reminders.length,
                     name : name,
                     des : des ,
                     time : remindTime,
@@ -31,7 +30,7 @@ function AddReminder(userId , name , des , time , repeat , callback){
                     }
                     else{
                         console.log(Messages.REMINDER_ADDED,reminder);
-                        ScheduleReminder(reminder.id , userId)
+                        ScheduleReminder(user.reminders[user.reminders.length-1]._id , userId , user.reminders.length-1)
                         callback(null , user.reminders)
                     }
                 })
@@ -55,8 +54,7 @@ function DeleteReminder(userId , reminderId , callback){
         }else{
             try{
                 console.log(Messages.USER_FOUND , user);
-                const reminders = user.reminders.filter(reminder=>reminder.id != reminderId)
-                const _id = user.reminders.filter(reminder=>reminder.id == reminderId)[0]._id
+                const reminders = user.reminders.filter(reminder=>reminder._id != reminderId)
                 user.reminders = reminders;
                 user.save((err,user)=>{
                     if(err != null){
@@ -66,7 +64,7 @@ function DeleteReminder(userId , reminderId , callback){
                     else{
                         console.log(Messages.REMINDER_UPDATED,reminders);
                         callback(null , reminders)
-                        RemoveSchedule(_id)
+                        RemoveSchedule(reminderId)
                     }
                 })
             }catch(err){
@@ -88,40 +86,31 @@ function UpdateReminder(userId,reminderId, name , des , time , repeat , callback
             callback(err,null)
         }else{
             console.log(Messages.USER_FOUND , user);
-            if(reminderId < user.reminders.length && reminderId >= 0){
+            if(user.reminders.filter(reminder=>reminder._id == reminderId).length!=0){
                 user.reminders.map((rem)=>{
-                    if(rem.id == reminderId){
+                    if(rem._id == reminderId){
                         try{
                             const index = user.reminders.indexOf(rem)
-                            RemoveSchedule(user.reminders[index]._id)
-                            user.reminders.splice(index , 1)
-    
-                            const remindTime = new Date(time);
-                            const reminder = {
-                                id : reminderId,
-                                name : name,
-                                des : des ,
-                                time : remindTime,
-                                expired : false,
-                                repeat : repeat
-                            }
-                            user.reminders.push(reminder)
+                            RemoveSchedule(reminderId)
+                            user.reminders[index].name = name
+                            user.reminders[index].des = des
+                            user.reminders[index].time = time
+                            user.reminders[index].repeat = repeat
+                            user.save((err,user)=>{
+                                if(err != null){
+                                    console.log(err);
+                                    callback(err,null)
+                                }
+                                else{
+                                    console.log(Messages.REMINDER_UPDATED,user.reminders);
+                                    ScheduleReminder(reminderId,userId , index)
+                                    callback(null , user.reminders)
+                                }
+                            })
                         }catch(err){
                             console.log(err);
                             // callback(err,null)
                         }
-                    }
-                })
-                console.log(Messages.REMINDER_UPDATED);
-                user.save((err,user)=>{
-                    if(err != null){
-                        console.log(err);
-                        callback(err,null)
-                    }
-                    else{
-                        console.log(Messages.REMINDER_UPDATED,user.reminders);
-                        ScheduleReminder(reminderId,userId)
-                        callback(null , user.reminders)
                     }
                 })
             }else{

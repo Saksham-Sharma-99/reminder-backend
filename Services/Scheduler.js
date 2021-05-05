@@ -4,7 +4,7 @@ const { UserModel } = require('../Models/User');
 const { SendMail } = require('./Mailer');
 
 
-function ScheduleReminder(reminderId,userId){
+function ScheduleReminder(reminderId,userId , index){
     UserModel.findById(userId , (err,user)=>{
         if(err != null){
             console.log(err);
@@ -13,8 +13,7 @@ function ScheduleReminder(reminderId,userId){
             console.log(Messages.USER_DOESNT_EXIST);
         }
         else{
-            console.log(Messages.USER_FOUND , user);
-            var reminder = user.reminders[reminderId]
+            var reminder = user.reminders[index]
             if(!isPastDate(reminder)){
                 const remindTime = new Date(reminder.time)
                     scheduler.scheduleJob(String(reminder._id),remindTime , ()=>{
@@ -24,9 +23,9 @@ function ScheduleReminder(reminderId,userId){
                 })
             }else{
                 try{
-                    user.reminders[reminderId].expired = true
+                    user.reminders[index].expired = true
                     user.save()
-                    console.log(Messages.MARKED_EXPIRED,user.reminders[reminderId]); 
+                    console.log(Messages.MARKED_EXPIRED,user.reminders[index]); 
                 }catch(err){
                     console.log(err);
                 }
@@ -35,17 +34,22 @@ function ScheduleReminder(reminderId,userId){
     })
 }
 
-function RemoveSchedule(reminderId ){
+function RemoveSchedule(reminderId){
     scheduler.cancelJob(String(reminderId))
     console.log(Messages.SCHEDULE_REMOVED);
 }
 
 
 function isPastDate(reminder){
-    var now = new Date();
-    var remindTime = new Date(reminder.time)
+    try{
+        var now = new Date();
+        var remindTime = new Date(reminder.time)
 
-    return now > remindTime; 
+        return now > remindTime;
+
+    }catch(err){
+        console.log(err);
+    } 
 }
 
 module.exports = {

@@ -6,7 +6,6 @@ const userSchema = mongoose.Schema({
     password : String,
     reminders : [
         {
-            id : Number,
             name : String,
             des : String,
             time : String,
