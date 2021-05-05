@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { Messages } = require('../Models/Constants')
 
 function Verify(req,res,next){
     const bearerHeader = req.headers['authorization']
@@ -28,7 +29,7 @@ function AssignToken(user,callback){
             console.log(err)
             callback(err,null)
         }else{
-            console.log("assigned token successfully")
+            console.log(Messages.TOKEN_ASSIGNED)
             callback(null , token)
         }
     })

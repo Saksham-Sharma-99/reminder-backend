@@ -1,3 +1,4 @@
+const { Messages } = require("../Models/Constants");
 const { UserModel } = require("../Models/User");
 const { AssignToken } = require("./Auth");
 
@@ -7,8 +8,8 @@ function AddUser(name , email , password , callback){
             console.log(err);
             callback(err,null)
         }else if( user != null){
-            console.log("User Exists with email" , email);
-            callback("user already exists" , null)
+            console.log(Messages.USER_ALREADY_EXIST , email);
+            callback(Messages.USER_ALREADY_EXIST , null)
         }else{
             const newUser = new UserModel({
                 name : name,
@@ -17,7 +18,7 @@ function AddUser(name , email , password , callback){
                 reminders : []
             })
             newUser.save()
-            console.log("Added user successfully" , newUser);
+            console.log(Messages.USER_ADDED , newUser);
             callback(null , newUser)
         }
     })
@@ -29,15 +30,15 @@ function LogIn( email , password , callback){
             console.log(err);
             callback(err,null , null)
         }else if( user == null){
-            console.log("User doesn't exist ");
-            callback("user dosen't exist" , null , null)
+            console.log(Messages.USER_DOESNT_EXIST);
+            callback(Messages.USER_DOESNT_EXIST , null , null)
         }else{
             AssignToken(user , (err,token)=>{
                 if(err != null){
                     console.log(err);
                     callback(err,null , null)
                 }else{
-                    console.log("Log in Successful",user);
+                    console.log(Messages.LOGGED_IN,user);
                     callback(null ,user,token);
                 }
             })

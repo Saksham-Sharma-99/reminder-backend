@@ -1,3 +1,4 @@
+const { Messages } = require("../Models/Constants");
 const { UserModel } = require("../Models/User");
 
 function AddReminder(userId , name , des , time , repeat , callback){
@@ -7,10 +8,10 @@ function AddReminder(userId , name , des , time , repeat , callback){
             callback(err,null)
         }
         else if( user == null){
-            console.log("no user with user id",userId);
+            console.log(Messages.USER_DOESNT_EXIST,userId);
             callback(err,null)
         }else{
-            console.log("user found" , user);
+            console.log(Messages.USER_FOUND , user);
             try{
                 const remindTime = new Date(time);
                 const reminder = {
@@ -23,7 +24,7 @@ function AddReminder(userId , name , des , time , repeat , callback){
                 }
                 user.reminders.push(reminder)
                 user.save()
-                console.log("reminder added",reminder);
+                console.log(Messages.REMINDER_ADDED,reminder);
                 callback(null , user.reminders)
             }catch(err){
                 console.log(err);
@@ -41,14 +42,14 @@ function DeleteReminder(userId , reminderId , callback){
             callback(err,null)
         }
         else if( user == null){
-            console.log("no user with user id",userId);
+            console.log(Messages.USER_DOESNT_EXIST,userId);
             callback(err,null)
         }else{
-            console.log("user found" , user);
+            console.log(Messages.USER_FOUND , user);
             const reminders = user.reminders.filter(reminder=>reminder.id != reminderId)
             user.reminders = reminders;
             user.save();
-            console.log("reminders updated",reminders);
+            console.log(Messages.REMINDER_UPDATED,reminders);
             callback(null , reminders)
         }
     })
@@ -61,10 +62,10 @@ function UpdateReminder(userId,reminderId, name , des , time , repeat , callback
             callback(err,null)
         }
         else if( user == null){
-            console.log("no user with user id",userId);
+            console.log(Messages.USER_DOESNT_EXIST,userId);
             callback(err,null)
         }else{
-            console.log("user found" , user);
+            console.log(Messages.USER_FOUND , user);
             if(reminderId < user.reminders.length && reminderId >= 0){
                 user.reminders.map((rem)=>{
                     if(rem.id == reminderId){
@@ -88,12 +89,12 @@ function UpdateReminder(userId,reminderId, name , des , time , repeat , callback
                         }
                     }
                 })
-                console.log("reminder updated");
+                console.log(Messages.REMINDER_UPDATED);
                 user.save()
                 callback(null , user.reminders)
             }else{
-                console.log("reminder doesn't exist");
-                callback("reminder doesn't exist",null)
+                console.log(Messages.REMINDER_DOESNT_EXIST);
+                callback(Messages.REMINDER_DOESNT_EXIST,null)
             }
         }
     })
