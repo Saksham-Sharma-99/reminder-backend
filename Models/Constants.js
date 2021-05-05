@@ -10,7 +10,12 @@ const Messages = {
     REMINDER_ADDED : "Reminder added",
     REMINDER_DELETED : "Reminder deleted",
     REMINDER_UPDATED : "Reminder updated",
-    REMINDER_DOESNT_EXIST : "Reminder doesn't exist"
+    REMINDER_DOESNT_EXIST : "Reminder doesn't exist",
+    MARKED_EXPIRED : "Marked expired",
+    SCHEDULE_REMOVED : "Schedule removed",
+
+    SENDING_MAIL : "sending mail to"
+
 }
 
 const RepeatTime = {

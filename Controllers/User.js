@@ -17,9 +17,15 @@ function AddUser(name , email , password , callback){
                 password : password,
                 reminders : []
             })
-            newUser.save()
-            console.log(Messages.USER_ADDED , newUser);
-            callback(null , newUser)
+            newUser.save((err,user)=>{
+                if(err != null){
+                    console.log(err);
+                    callback(err,null)
+                }else{
+                    console.log(Messages.USER_ADDED , user);
+                    callback(null , user)
+                }
+            })
         }
     })
 }
