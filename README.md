@@ -4,7 +4,7 @@ Remember to add .env file in root directory
 
 ```
 PORT={port address)
-MONGODB_URI={mongoDB port address}
+MONGODB_URI={mongoDB port address / database name}
 SERVICE={email service : gmail , outlook , hotmail etc}
 EMAIL={email id}
 PASSWORD={password}
